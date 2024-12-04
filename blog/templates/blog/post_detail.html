@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <article class="blog-post">
+        <h1 class="mb-4">{{ post.title }}</h1>
+        
+        <div class="post-meta text-muted mb-4">
+            <span>By {{ post.author.username }}</span>
+            <span class="mx-2">•</span>
+            <span>{{ post.created_date|date:"F j, Y" }}</span>
+        </div>
+
+        {% if post.image %}
+        <img src="{{ post.image.url }}" class="img-fluid mb-4 rounded" alt="{{ post.title }}">
+        {% endif %}
+
+        <div class="post-content">
+            {{ post.content|linebreaks }}
+        </div>
+
+        {% if user == post.author %}
+        <div class="mt-4">
+            <a href="{% url 'blog:post_update' post.slug %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'blog:post_delete' post.slug %}" class="btn btn-danger">Delete</a>
+        </div>
+        {% endif %}
+    </article>
+</div>
+{% endblock %} 

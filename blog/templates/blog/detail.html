@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        {% extends "base.html" %}
+        {% block title %}{{ post }}{% endblock %}
+        {% block content %}
+
+        {% if post.image %}
+        <img class="post-img" src="{{ post.image.url }}">
+        {% endif %}
+
+        <p>Posted {{ post.date|date:"M J , Y" }}    </p>
+        <p>Updated {{ post.updated}}</p>
+        {% if post.author %}<p>{{ post.author}}</p>{% endif %}
+        <p>{{ post.body }}</p>
+
+        {% endblock %}
+    
+    </body>
+</html>

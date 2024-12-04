@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="pagination">
+            {% if posts.has_previous %}
+               <a href="?page=1">First</a>
+               <a href="?page={{ posts.previous_page_number}}">previous</a>
+               {% endif %}
+               
+               <span>{{ posts.number }}</span>
+               <sapan>of</sapan>
+               <span>{{ posts.paginator.num_pages }}</span>
+
+               {% if posts.has_next %}
+               <a href="?page={{ posts.next_page_number }}">Next</a>
+               <a href="?page={{ posts.paginator.num_pages }}">Last</a>
+               {% endif %}
+
+        </div>
+    
+    </body>
+</html>

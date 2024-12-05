@@ -16,3 +16,4 @@ Markdown==3.7
 pilkit==3.0
 pillow==11.0.0
 sqlparse==0.5.2
+whitenoise==6.6.0

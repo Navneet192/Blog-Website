@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <div class="blog-feed">
+        <!-- Featured Post (first post) -->
+        {% if posts %}
+        {% with posts|first as featured_post %}
+        <article class="featured-post mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <div class="featured-content">
+                        <div class="author-info mb-2">
+                            <div class="author-avatar-small">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <span class="author-name">{{ featured_post.author.username }}</span>
+                        </div>
+                        <h1 class="featured-title">
+                            <a href="{% url 'blog:post_detail' featured_post.slug %}">{{ featured_post.title }}</a>
+                        </h1>
+                        <p class="featured-excerpt">{{ featured_post.content|truncatewords:50 }}</p>
+                        <div class="post-meta">
+                            <span class="post-date">{{ featured_post.created_date|date:"M d, Y" }}</span>
+                            <span class="dot">·</span>
+                            <span class="read-time">{{ featured_post.content|wordcount|divisibleby:100 }} min read</span>
+                        </div>
+                    </div>
+                </div>
+                {% if featured_post.image %}
+                <div class="col-md-5">
+                    <div class="featured-image">
+                        <img src="{{ featured_post.image.url }}" alt="{{ featured_post.title }}">
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        {% endwith %}
+
+        <!-- Regular Posts -->
+        <div class="posts-grid">
+            {% for post in posts|slice:"1:" %}
+            <article class="post-card">
+                <div class="post-content">
+                    <div class="author-info mb-2">
+                        <div class="author-avatar-small">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <span class="author-name">{{ post.author.username }}</span>
+                    </div>
+                    
+                    <h2 class="post-title">
+                        <a href="{% url 'blog:post_detail' post.slug %}">{{ post.title }}</a>
+                    </h2>
+                    
+                    <p class="post-excerpt">{{ post.content|truncatewords:25 }}</p>
+                    
+                    <div class="post-meta">
+                        <div class="meta-left">
+                            <span class="post-date">{{ post.created_date|date:"M d" }}</span>
+                            <span class="dot">·</span>
+                            <span class="read-time">{{ post.content|wordcount|divisibleby:200 }} min read</span>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn-save" title="Save">
+                                <i class="far fa-bookmark"></i>
+                            </button>
+                            <button class="btn-more" title="More">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% if post.image %}
+                <div class="post-image">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-posts">
+            <h3>No stories yet</h3>
+            <p>Be the first one to write a story!</p>
+        </div>
+        {% endif %}
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav class="pagination-wrapper">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li>
+                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                <li>
+                    <a href="?page={{ num }}" class="page-link {% if page_obj.number == num %}active{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li>
+                    <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+/* Blog Feed Styles */
+.blog-feed {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Featured Post */
+.featured-post {
+    padding: 2rem;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 3rem;
+}
+
+.featured-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 1rem 0;
+}
+
+.featured-title a {
+    color: #242424;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.featured-title a:hover {
+    color: #1a73e8;
+}
+
+.featured-excerpt {
+    font-size: 1.1rem;
+    color: #4a4a4a;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.featured-image {
+    border-radius: 12px;
+    overflow: hidden;
+    height: 300px;
+}
+
+.featured-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Regular Posts */
+.posts-grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.post-card {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.post-content {
+    flex: 1;
+    padding-right: 2rem;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.author-avatar-small {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #757575;
+}
+
+.author-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #292929;
+}
+
+.post-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0.5rem 0;
+}
+
+.post-title a {
+    color: #242424;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.post-title a:hover {
+    color: #1a73e8;
+}
+
+.post-excerpt {
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #757575;
+    font-size: 14px;
+}
+
+.meta-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dot {
+    margin: 0 4px;
+}
+
+.post-image {
+    width: 200px;
+    height: 134px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-save, .btn-more {
+    background: none;
+    border: none;
+    padding: 4px;
+    color: #757575;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-save:hover, .btn-more:hover {
+    color: #242424;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .featured-title {
+        font-size: 2rem;
+    }
+
+    .post-card {
+        flex-direction: column;
+    }
+
+    .post-content {
+        padding-right: 0;
+        padding-bottom: 1rem;
+    }
+
+    .post-image {
+        width: 100%;
+        height: 200px;
+    }
+
+    .featured-post {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %} 

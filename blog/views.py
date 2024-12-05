@@ -8,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from .models import Post
 from .serializers import PostSerializer, LoginSerializer
+from django.template.defaultfilters import slugify
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -41,7 +42,7 @@ class PostViewSet(viewsets.ModelViewSet):
 # Regular Views
 class PostListView(ListView):
     model = Post
-    template_name = 'home.html'
+    template_name = 'blog/home.html'
     context_object_name = 'posts'
     paginate_by = 6
 
@@ -62,6 +63,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Create New Post'
+        return context
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post

@@ -1,6 +1,10 @@
 .auth-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    background: linear-gradient(135deg, #7cd8c8 0%, #6bc7b7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem 2rem 2rem;
 }
 
 .row.auth-container {
@@ -11,20 +15,35 @@
 
 .auth-form-container {
     background: white;
-    max-width: 450px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 3rem 2rem;
     width: 100%;
-    padding: 2.5rem;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    margin: auto;
+    z-index: 1;
+}
+
+.auth-form-container::before {
+    content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(to right, #7cd8c8, #6bc7b7);
 }
 
 @media (max-width: 576px) {
+    .auth-container {
+        padding-top: 5rem;
+    }
+    
     .auth-form-container {
         max-width: 90%;
-        padding: 1.5rem;
-        margin: 1rem;
+        padding: 2rem 1.5rem;
     }
 }
 
@@ -42,28 +61,141 @@
 .auth-title {
     color: #2d3748;
     font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-floating {
+    margin-bottom: 1.5rem;
 }
 
 .form-floating input.form-control {
     border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 0.75rem;
+    height: auto;
+    font-size: 1rem;
     transition: all 0.3s ease;
 }
 
 .form-floating input.form-control:focus {
-    border-color: #4299e1;
-    box-shadow: 0 0 0 0.2rem rgba(66, 153, 225, 0.25);
+    border-color: #7cd8c8;
+    box-shadow: 0 0 0 0.2rem rgba(124, 216, 200, 0.25);
+}
+
+.form-floating label {
+    padding: 1rem 0.75rem;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+    background: linear-gradient(135deg, #7cd8c8 0%, #6bc7b7 100%);
     border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
     font-weight: 600;
-    transition: transform 0.2s ease;
+    width: 100%;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+    box-shadow: 0 5px 15px rgba(124, 216, 200, 0.4);
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.auth-links a {
+    color: #7cd8c8;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.auth-links a:hover {
+    color: #6bc7b7;
+    text-decoration: underline;
+}
+
+.social-login {
+    margin-top: 2rem;
+}
+
+.social-login-title {
+    text-align: center;
+    color: #718096;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.social-login-title::before,
+.social-login-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.social-login-title::before {
+    left: 0;
+}
+
+.social-login-title::after {
+    right: 0;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-social {
+    flex: 1;
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    color: #4a5568;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-social:hover {
+    background: #f7fafc;
+    border-color: #7cd8c8;
+    color: #7cd8c8;
+}
+
+.btn-social i {
+    font-size: 1.2rem;
+}
+
+.form-check {
+    margin: 1rem 0;
+}
+
+.form-check-input:checked {
+    background-color: #7cd8c8;
+    border-color: #7cd8c8;
+}
+
+.error-message {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
 }
 
 .auth-illustration {
@@ -96,5 +228,21 @@
 
 .login-link:hover {
     text-decoration: underline !important;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-form-container {
+    animation: fadeIn 0.5s ease-out;
 }
  

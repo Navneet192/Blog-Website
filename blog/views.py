@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from .models import Post
 from .serializers import PostSerializer, LoginSerializer
 from django.template.defaultfilters import slugify
+from django.db.models import Q
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -47,12 +48,34 @@ class PostListView(ListView):
     paginate_by = 6
 
     def get_queryset(self):
-        return Post.objects.all().order_by('-created_date')
+        queryset = Post.objects.all()
+        query = self.request.GET.get('q')
+        
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(author__username__icontains=query)
+            )
+        
+        return queryset.order_by('-created_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.GET.get('q'):
+            context['search_query'] = self.request.GET.get('q')
+        return context
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'blog/post_detail.html'
+    template_name = 'blog/blog_detail.html'
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print(f"Loading template: {self.template_name}")
+        print(f"Post content: {self.object.content}")
+        return context
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
